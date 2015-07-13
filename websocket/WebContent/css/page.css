@@ -1,0 +1,30 @@
+@CHARSET "UTF-8";
+.page_left{
+	float : left;
+	padding-top : 5px;
+}
+.page_right{
+	float : right;
+}
+.unisPage{
+	box-shadow: 0 1px 20px #dedede;
+	background:#fff;
+	padding:15px;
+}
+.unispage-page-highlight{
+  color: #262626;
+  text-decoration: none;
+  background-color: #f5f5f5;
+}
+
+.page_foot{
+	
+}
+.page_foot .dropdown{
+	float : left;
+	padding-left : 12px;
+}
+.page_foot .dropdown>button{
+	height : 30px;
+	width : 64px;
+}

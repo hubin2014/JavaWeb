@@ -1,0 +1,89 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Expires" content="0" />
+<meta http-equiv="Cache-Control" content="no-cache" />
+<meta http-equiv="Pragma" content="no-cache" />
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+	var name = "";
+	var websocket;
+	$(document).ready(
+			function() {
+				disp_prompt();
+				$.post("login", {
+					"user" : name
+				}, function() {
+					websocket = new WebSocket(
+							"ws://localhost:8080/websocket/message");
+					websocket.onopen = function() {
+
+					}
+					websocket.onerror = function() {
+						//连接失败  
+					}
+					websocket.onclose = function() {
+						//连接断开  
+					}
+					//消息接收  
+					websocket.onmessage = function(message) {
+						var message = JSON.parse(message.data);
+						if (message.type == 'sendMessage') {
+							var temp = "<tr><td>" + message.sender
+									+ ":</td><td>" + message.message
+									+ "</td><tr>";
+							$("#chart").append(temp);
+						} else if (message.type == 'user_join') {
+							var temp = "<tr><td colspan='2'>" + message.user
+									+ " 登录系统</td><tr>";
+							$("#chart").append(temp);
+						} else if (message.type == 'user_leave') {
+							var temp = "<tr><td colspan='2'>" + message.user
+									+ " 离开系统</td><tr>";
+							$("#chart").append(temp);
+						}
+					}
+				}, "html");
+
+			});
+	function disp_prompt() {
+		var newname = prompt("请输入你的名称：", "");
+		if (newname != null && newname != "") {
+			name = newname;
+			$("#nowUser").text(name);
+		} else {
+			disp_prompt();
+		}
+	}
+	function sendMessage() {
+		websocket.send($("#message").val());
+		$("#message").val("");
+	}
+</script>
+<div
+	style="box-shadow: 0 1px 20px #dedede; background: #fff; padding: 15px;">
+	<table id="chart">
+		<thead>
+			<tr>
+				<th style="width: 400px; align: center" colspan='2'>聊天区域</th>
+			</tr>
+		</thead>
+	</table>
+</div>
+<div style="height: 20px"></div>
+<div
+	style="box-shadow: 0 1px 20px #dedede; background: #fff; padding: 15px;">
+	<table>
+		<tr>
+			<td>当前用户：</td>
+			<td id="nowUser"></td>
+		</tr>
+		<tr>
+			<td>信息：</td>
+			<td><input id="message"></td>
+		</tr>
+		<tr>
+			<td><button onclick="sendMessage()">发送</button></td>
+		</tr>
+	</table>
+</div>
+</html>
