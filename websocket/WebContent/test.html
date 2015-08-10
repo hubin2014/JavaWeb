@@ -1,0 +1,118 @@
+<html>
+<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+<meta http-equiv="Expires" content="0" />    
+<meta http-equiv="Cache-Control" content="no-cache" />    
+<meta http-equiv="Pragma" content="no-cache" /> 
+<script type="text/javascript" src="js/jquery-1.7.2.min.js"></script>
+<script type="text/javascript">
+var myChart
+$(function(){
+getTime();
+myChart = echarts.init(document.getElementById('test'));
+
+ myChart.setOption({
+   tooltip: {
+       trigger: "axis",
+       axisPointer: {
+           type: "none"
+       }
+   },
+   toolbox: {
+       feature: {
+           dataView: {
+               readOnly: true
+           },
+           magicType: {
+               type: ["line", "bar"],
+               show: false
+           }
+       }
+   },
+   xAxis: [
+       {
+           type: "category",
+           boundaryGap: false,
+           data: getTime(),
+           scale: true,
+           axisLine: {
+               show: true,
+               lineStyle: {
+                   color: "rgb(68, 136, 187)",
+                   width: 2,
+                   type: "solid"
+               }
+           },
+           axisLabel: {
+               interval: "auto"
+           },
+           nameTextStyle: {
+               color: "#C4EAFC"
+           }
+       }
+   ],
+   yAxis: [
+       {
+           type: "value",
+           min: 0,
+           max: 100,
+           splitNumber: 5,
+           splitLine: {
+               show: true
+           },
+           splitArea: {
+               show: false
+           },
+           axisTick: {
+               show: true
+           }
+       }
+   ],
+   series: [
+       {
+           name: "CPU",
+           type: "line",
+           data: getCpu(),
+           smooth: true,
+           symbol:"circle"
+       }
+   ]
+});
+
+setInterval(addpoint,5000);
+});
+function getTime(){
+ var time = [];
+ var date = new Date().getTime();
+ for(var i=0;i<12;i++){
+   var tempDate = new Date(date - 5000*i);
+   var strDate = tempDate.getFullYear()+"-"+(tempDate.getMonth()+1)+"-"+tempDate.getDate()+" "+tempDate.getHours()+":"+tempDate.getMinutes()+":"+tempDate.getSeconds();
+   time.push(strDate);
+ }
+ return time.reverse();
+}
+function getCpu(){
+  var cpu = [];
+  for(var i=0;i<12;i++){
+    cpu.push(Math.random()*100);
+  }
+  return cpu;
+}
+function addpoint(){
+var tempDate = new Date();
+var axisData = tempDate.getFullYear()+"-"+(tempDate.getMonth()+1)+"-"+tempDate.getDate()+" "+tempDate.getHours()+":"+tempDate.getMinutes()+":"+tempDate.getSeconds();
+  myChart.addData([
+        [
+            0,        // 系列索引
+            Math.round(Math.random() * 100), // 新增数据
+            false,    // 新增数据是否从队列头部插入
+            false,    // 是否增加队列长度，false则自定删除原有数据，队头插入删队尾，队尾插入删队头
+            axisData  // 坐标轴标签
+        ]
+    ]);
+}
+</script>
+<body>
+<div id="test" style="height:500px;width:500px;"></div>
+<script type="text/javascript" src="js/echarts.js"></script>
+</body>
+</html>
